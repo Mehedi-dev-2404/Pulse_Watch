@@ -46,7 +46,25 @@ def main_menu():
             break
         else:
             print("Invalid choice. Please select a valid option.")
-    
+
+def add_service():
+    name = input("Enter service name: ")
+    url = input("Enter service URL: ")
+    if service_exists(services, name):
+        print(f"Service '{name}' already exists.")
+        return
+    interval = int(input("Enter check interval (in seconds): "))
+    status = "UNKNOWN"
+    last_checked = "Never"
+    new_service = {
+        "name": name,
+        "url": url,
+        "interval": interval,
+        "status": status,
+        "last_checked": last_checked
+    }
+
+    save_services(new_service)
 
 initialize_storage()
 services = load_services()
