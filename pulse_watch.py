@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 
 pulse_file = "pulse_data.json"
   
@@ -49,7 +50,7 @@ def main_menu():
             print("Invalid choice. Please select a valid option.")
 
 def add_service():
-    services =load_services()
+    services = load_services()
 
     name = input("Enter service name: ")
 
@@ -76,7 +77,9 @@ def add_service():
         "url": url,
         "interval": interval,
         "status": "UNKNOWN",
-        "last_checked": "Never"
+        "last_checked": None,
+        "response_time" : None,
+        "status_code": None
     }
 
     services.append(new_service)
@@ -106,6 +109,25 @@ def view_services():
     else:
         print("No services registered.")
         
+def check_service(service):
+    url = service['url']
+    try:
+        response = requests.get(url, timeout=10)
+        duration = str(response.elapsed.total_seconds() * 1000)
+        
+        if response.status_code in range(200, 300):
+            service['status'] = 'UP'
+            service['status_code'] = response.status_code
+            service['response_time'] = duration
+        else:
+            service['status'] = 'DOWN'
+            service['status_code'] = response.status_code
+            service['response_time'] = duration
+
+    except TimeoutError:
+        print(f"Request to {url} timed out.")
+        service['status'] = 'DOWN'
+
 
 initialize_storage()
 main_menu()
