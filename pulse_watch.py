@@ -66,5 +66,20 @@ def add_service():
 
     save_services(new_service)
 
+def remove_services():
+    remove_name = input("Enter the name of the service to remove: ")
+    data = load_services()
+    if service_exists(data, remove_name):
+        for service in data:
+            if service['name'] == remove_name:
+                data.remove(service)
+                save_services(data)
+                print(f"Service '{remove_name}' removed.")
+                return
+    else:
+        print(f"Service '{remove_name}' not found.")
+        
+
+
 initialize_storage()
 services = load_services()
