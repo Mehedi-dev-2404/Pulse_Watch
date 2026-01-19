@@ -78,8 +78,17 @@ def remove_services():
                 return
     else:
         print(f"Service '{remove_name}' not found.")
-        
 
+def view_services():
+    data = load_services()
+    if data:
+        print("Registered Services:")
+        print("-"* 20)
+        for service in data:
+            print(f"Name: {service['name']} | URL: {service['url']} | Interval: {service['interval']}s | Status: {service['status']} | Last Checked: {service['last_checked']}")
+    else:
+        print("No services registered.")
+        
 
 initialize_storage()
 services = load_services()
