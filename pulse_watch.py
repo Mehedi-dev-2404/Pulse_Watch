@@ -114,7 +114,7 @@ def check_service(service):
     url = service['url']
     try:
         response = requests.get(url, timeout=10)
-        duration = str(response.elapsed.total_seconds() * 1000)
+        duration = response.elapsed.total_seconds() * 1000
         
         if response.status_code in range(200, 300):
             service['status'] = 'UP'
@@ -126,15 +126,23 @@ def check_service(service):
             service['response_time'] = duration
         else:
             service['status'] =  'UNSTABLE'
+            service['status_code'] = response.status_code
+            service['response_time'] = duration
         
         service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     except requests.exceptions.Timeout:
         print(f"Request to {url} timed out.")
         service['status'] = 'DOWN'
+        service['status_code'] = response.status_code
+        service['response_time'] = duration
+        service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     except requests.RequestException as e:
         print("Connection error:")
         service['status'] = 'DOWN'
+        service['status_code'] = response.status_code
+        service['response_time'] = duration
+        service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 initialize_storage()
