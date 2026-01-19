@@ -2,15 +2,6 @@ import json
 import os
 
 pulse_file = "pulse_data.json"
-
-try:
-    with open(pulse_file, "r") as file:
-        pulse_data = file.read()
-        print("Pulse data loaded successfully.")
-except FileNotFoundError:
-    with open(pulse_file, "w") as file:
-        file.write("[]")
-    print("Pulse data file not found. Created a new one.")
   
 def initialize_storage():
     if not os.path.exists(pulse_file):
@@ -31,3 +22,6 @@ def service_exists(services, name):
         if service['name'] == name:
             return True
     return False
+
+initialize_storage()
+services = load_services()
