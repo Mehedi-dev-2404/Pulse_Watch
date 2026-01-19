@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import requests
@@ -108,7 +109,7 @@ def view_services():
             print(f"Name: {service['name']} | URL: {service['url']} | Interval: {service['interval']}s | Status: {service['status']} | Last Checked: {service['last_checked']}")
     else:
         print("No services registered.")
-        
+
 def check_service(service):
     url = service['url']
     try:
@@ -119,13 +120,20 @@ def check_service(service):
             service['status'] = 'UP'
             service['status_code'] = response.status_code
             service['response_time'] = duration
-        else:
+        elif response.status_code in range(300, 500):
             service['status'] = 'DOWN'
             service['status_code'] = response.status_code
             service['response_time'] = duration
+        else:
+            service['status'] =  'UNSTABLE'
+        
+        service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    except TimeoutError:
+    except requests.exceptions.Timeout:
         print(f"Request to {url} timed out.")
+        service['status'] = 'DOWN'
+    except requests.RequestException as e:
+        print("Connection error:")
         service['status'] = 'DOWN'
 
 
