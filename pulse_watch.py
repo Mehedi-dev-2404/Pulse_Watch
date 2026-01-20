@@ -26,6 +26,7 @@ def service_exists(services, name):
     for service in services:
         if service['name'] == name:
             return True
+        
     return False
 
 def main_menu():
@@ -63,6 +64,7 @@ def add_service():
         return
     
     url = input("Enter service URL: ")
+
     if not url.startswith("http://") and not url.startswith("https://"):
         print("Invalid URL. Please enter a valid URL starting with http:// or https://")
         return
@@ -101,6 +103,7 @@ def remove_service():
         return
     
     save_services(updated_sevice)
+
     print(f"Service '{remove_name}' removed.")
 
 def view_services():
@@ -110,11 +113,13 @@ def view_services():
         print("-"* 20)
         for service in data:
             print(f"Name: {service['name']} | URL: {service['url']} | Interval: {service['interval']}s | Status: {service['status']} | Last Checked: {service['last_checked']}")
+
     else:
         print("No services registered.")
 
 def check_service(service):
     url = service['url']
+
     try:
         response = requests.get(url, timeout=10)
         duration = response.elapsed.total_seconds() * 1000
@@ -123,10 +128,12 @@ def check_service(service):
             service['status'] = 'UP'
             service['status_code'] = response.status_code
             service['response_time'] = duration
+
         elif response.status_code in range(300, 500):
             service['status'] = 'UNSTABLE'
             service['status_code'] = response.status_code
             service['response_time'] = duration
+
         elif response.status_code in range(500, 600):
             service['status'] = 'DOWN'
             service['status_code'] = response.status_code
@@ -140,6 +147,7 @@ def check_service(service):
         service['status_code'] = None
         service['response_time'] = None
         service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     except requests.RequestException:
         print("Connection error:")
         service['status'] = 'DOWN'
