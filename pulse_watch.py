@@ -147,5 +147,27 @@ def check_service(service):
         service['response_time'] = None
         service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        write_service_log(service)
+
+def write_service_log(service):
+    log_file = os.path.join(logs_directory, f"{service['name'].lower()}.json")
+    log_entry = {
+        "timestamp": service['last_checked'],
+        "status": service['status'],
+        "status_code": service['status_code'],
+        "response_time": service['response_time']
+    }
+
+    if os.path.exists(log_file):
+        with open(log_file, 'r') as file:
+            logs = json.load(file)
+    else:
+        logs = []
+
+    logs.append(log_entry)
+
+    with open(log_file, 'w') as file:
+        json.dump(logs, file, indent=2)
+
 initialize_storage()
 main_menu()
