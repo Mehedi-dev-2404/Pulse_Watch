@@ -3,20 +3,23 @@ import json
 import os
 import requests
 
+logs_directory = "logs"
 pulse_file = "pulse_data.json"
   
 def initialize_storage():
+    if not os.path.exists(logs_directory):
+        os.mkdir(logs_directory)
     if not os.path.exists(pulse_file):
         with open(pulse_file, "w") as file:
             json.dump([], file)
 
 def load_services():
-    with open('pulse_data.json', 'r') as file:
+    with open(pulse_file, 'r') as file:
         services = json.load(file)
     return services
 
 def save_services(services):
-    with open('pulse_data.json', 'w') as file:
+    with open(pulse_file, 'w') as file:
         json.dump(services, file, indent=2)
 
 def service_exists(services, name):
@@ -143,7 +146,6 @@ def check_service(service):
         service['status_code'] = None
         service['response_time'] = None
         service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 
 initialize_storage()
 main_menu()
