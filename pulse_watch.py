@@ -183,7 +183,10 @@ main_menu()
 while True:
     services = load_services()
     for service in services:
-        next_check_time = service['last_checked'] + timedelta(seconds=service['interval'])  
-        if service['last_checked'] >= next_check_time:
+
+        last_checked_time = datetime.strptime(service['last_checked'],"%Y-%m-%d %H:%M:%S")
+
+        next_check_time = last_checked_time + timedelta(seconds=service['interval'])  
+        if last_checked_time >= next_check_time:
             check_service(service)
     save_services(services)
