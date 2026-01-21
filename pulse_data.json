@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "name": "Google",
+    "url": "https://www.google.com",
+    "interval": 10,
+    "status": "UP",
+    "last_checked": "2026-01-21 22:19:18",
+    "response_time": 105.889,
+    "status_code": 200
+  },
+  {
+    "name": "GitHub",
+    "url": "https://www.github.com",
+    "interval": 15,
+    "status": "UP",
+    "last_checked": "2026-01-21 22:19:18",
+    "response_time": 47.265,
+    "status_code": 200
+  },
+  {
+    "name": "BrokenService",
+    "url": "https://thisdoesnotexist12345.com",
+    "interval": 5,
+    "status": "DOWN",
+    "last_checked": "2026-01-21 22:19:23",
+    "response_time": null,
+    "status_code": null
+  }
+]
