@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os
 import requests
@@ -123,7 +123,6 @@ def check_service(service):
     try:
         response = requests.get(url, timeout=10)
         duration = response.elapsed.total_seconds() * 1000
-        
         if response.status_code in range(200, 300):
             service['status'] = 'UP'
             service['status_code'] = response.status_code
@@ -159,6 +158,7 @@ def check_service(service):
 
 def write_service_log(service):
     log_file = os.path.join(logs_directory, f"{service['name'].lower()}.json")
+
     log_entry = {
         "timestamp": service['last_checked'],
         "status": service['status'],
@@ -179,3 +179,11 @@ def write_service_log(service):
 
 initialize_storage()
 main_menu()
+
+while True:
+    services = load_services()
+    for service in services:
+        next_check_time = service['last_checked'] + timedelta(seconds=service['interval'])  
+        if service['last_checked'] >= next_check_time:
+            check_service(service)
+    save_services(services)
