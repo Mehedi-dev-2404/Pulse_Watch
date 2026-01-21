@@ -1,4 +1,5 @@
 from datetime import datetime, time, timedelta
+import time
 import json
 import os
 import requests
@@ -154,8 +155,6 @@ def check_service(service):
         service['response_time'] = None
         service['last_checked'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        write_service_log(service)
-
 def write_service_log(service):
     log_file = os.path.join(logs_directory, f"{service['name'].lower()}.json")
 
@@ -178,9 +177,9 @@ def write_service_log(service):
         json.dump(logs, file, indent=2)
 
 initialize_storage()
-main_menu()
 
 while True:
+    main_menu()
     services = load_services()
     for service in services:
 
