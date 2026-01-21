@@ -177,9 +177,9 @@ def write_service_log(service):
         json.dump(logs, file, indent=2)
 
 initialize_storage()
+main_menu()
 
 while True:
-    main_menu()
     services = load_services()
     for service in services:
 
