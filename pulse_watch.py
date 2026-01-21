@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 import json
 import os
 import requests
@@ -184,9 +184,17 @@ while True:
     services = load_services()
     for service in services:
 
+        if service['last_checked'] is None:
+            check_service(service)
+            write_service_log(service)
+            continue
         last_checked_time = datetime.strptime(service['last_checked'],"%Y-%m-%d %H:%M:%S")
 
-        next_check_time = last_checked_time + timedelta(seconds=service['interval'])  
-        if last_checked_time >= next_check_time:
+        next_check_time = last_checked_time + timedelta(seconds=service['interval'])
+
+        if datetime.now() >= next_check_time:
             check_service(service)
+            write_service_log(service)
+    time.sleep(1)
+
     save_services(services)
